@@ -54,9 +54,13 @@ class g3d2sim:
       sleep(self.t_pixel - (t1 - t0))
 
   def write_screen(self, data):
+    t0 = time()
     with self.display_lock:
       for idx, strength in enumerate(data):
         self.draw_point(idx % self.X, idx / self.X, strength)
+    t1 = time()
+    if (t1-t0) < self.t_screen:
+      sleep(self.t_screen - (t1 - t0))
       
 
   def exit(self):
