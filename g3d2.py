@@ -9,8 +9,8 @@ class g3d2:
     self.HEIGHT = 4
 
   def show_addr(self):
-    self.ser.write('\x66\xfe')
     self.ser.flush()
+    self.ser.write('\x66\xfe')
 
   def write_pixel(self, x, y, intensity):
     modx = x / 8
@@ -20,8 +20,8 @@ class g3d2:
 
     module = self.WIDTH * (self.HEIGHT - mody - 1) + modx
 
-    self.ser.write(struct.pack('BBBBB', 0x68, module, px, 7-py, intensity))
     self.ser.flush()
+    self.ser.write(struct.pack('BBBBB', 0x68, module, px, 7-py, intensity))
 
   def write_screen(self, data):
     # Data is expected to be a list with values between 0 to 15
@@ -30,6 +30,7 @@ class g3d2:
     # In total, 32 rows are expected
     # Therefore it's a list with 2304 values
 
+    self.ser.flush()
     self.ser.write('\x67')
     i = 0
     for mody in range(self.HEIGHT-1, -1, -1):
@@ -52,4 +53,3 @@ class g3d2:
             self.ser.write(struct.pack('B', b))
 
     self.ser.write('\x00')
-    self.ser.flush()
